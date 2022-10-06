@@ -16,19 +16,25 @@ import java.util.Scanner;
 
 public class JogoDaVelha {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+        Thread.sleep(1000);//millis
+
+        Scanner input = new Scanner(System.in);
 
         String jogador1, jogador2, jogadorX = "", jogadorO = "";
         String jogadorXouO = "";
-        int primeiroJogador = 0;
+        int primeiroJogador;
         boolean partida = true, novaPartida = true;
         int placarX = 0, placarO = 0;
         String simOuNao = "";
-        Scanner input = new Scanner(System.in);
+        String[][] tabuleiro = {{"A1", "B1", "C1"}, {"A2", "B2", "C2"}, {"A3", "B3", "C3"}};
 
-        System.out.print("Digite o nome do primeiro Jogador: ");
+        iniciarJogo(tabuleiro);
+
+        System.out.print("Digite o nome do primeiro jogador: ");
         jogador1 = input.nextLine();
-        System.out.print("Digite o nome do segundo Jogador: ");
+        System.out.print("Digite o nome do segundo jogador: ");
         jogador2 = input.nextLine();
 
         do {
@@ -36,11 +42,12 @@ public class JogoDaVelha {
             if (primeiroJogador == 1) {
                 jogadorX = jogador1;
                 jogadorO = jogador2;
-                System.out.println(jogadorX + " será X e " + jogadorO + " será O, durante o jogo.");
+
             } else if (primeiroJogador == 2) {
                 jogadorX = jogador2;
                 jogadorO = jogador1;
-                System.out.println(jogadorX + " será X e " + jogadorO + " será O, durante o jogo.");
+                System.out.println("\nDurante o jogo, " + jogadorX + " será X e " + jogadorO + " será O.");
+
             } else if (primeiroJogador != 1 && primeiroJogador != 2) {
                 System.out.println("Jogador inexistente. Escolha entre as duas opções.");
             }
@@ -48,16 +55,17 @@ public class JogoDaVelha {
 
 
         while (novaPartida == true) {
+            boolean vencedor = false;
 
-            String[][] tabuleiro = {{"A1", "B1", "C1"}, {"A2", "B2", "C2"}, {"A3", "B3", "C3"}};
             int jogadas = 1;
 
             System.out.println("\nTabuleiro inicial:");
             imprimirTabuleiro(tabuleiro);
+            System.out.println();
 
             while (partida == true) {
 
-                tabuleiro = jogada(jogadas, jogadorXouO, jogadorX, jogadorO, tabuleiro);
+                tabuleiro = jogada(jogadas, jogadorX, jogadorO, tabuleiro);
 
                 String[] resultado = checarResultado(tabuleiro);
 
@@ -68,12 +76,14 @@ public class JogoDaVelha {
                         System.out.println("Placar: " + jogadorX + " (" + placarX + ") x "
                                 + jogadorO + " (" + placarO + ")");
                         partida = false;
+                        vencedor = true;
                     } else if (resultado[i].equals("OOO")) {
                         System.out.println(jogadorO + " ganhou a partida!");
                         placarO++;
                         System.out.println("Placar: " + jogadorX + " (" + placarX + ") x "
                                 + jogadorO + " (" + placarO + ")");
                         partida = false;
+                        vencedor = true;
                     }
                 }
                 if (jogadas == 9) {
@@ -81,24 +91,43 @@ public class JogoDaVelha {
                     System.out.println("Placar: " + jogadorX + " (" + placarX + ") x "
                             + jogadorO + " (" + placarO + ")");
                     partida = false;
+                    vencedor = false;
                 }
                 jogadas++;
 
             }
 
             if (partida == false) {
-                System.out.print("Desejam jogar novamente (S/N)? ");
-                simOuNao = input.nextLine();
-                if (simOuNao.equals("S")) {
-                    novaPartida = true;
-                    partida = true;
-                } else {
-                    novaPartida = false;
-                }
+                do {
+                    if(vencedor){
+                        System.out.print("Revanche (S/N)?");
+                    } else {
+                        System.out.print("Desejam jogar novamente (S/N)?");
+                    }
+                    simOuNao = input.nextLine().toUpperCase();
+                    if (simOuNao.equals("S")) {
+                        novaPartida = true;
+                        partida = true;
+                    } else {
+                        novaPartida = false;
+                    }
+                } while (!simOuNao.equals("S") || !simOuNao.equals("N"));
             }
 
         }
         input.close();
+    }
+
+    public static void iniciarJogo(String tabuleiro[][]) {
+        System.out.println("*********** BEM-VINDO(A) AO NOSSO JOGO DA VELHA! ***********");
+        System.out.println("• Para começar, é necessário inserir o nome dos dois jogadores;");
+        System.out.println("• Também é necessário identificar quem vai jogar primeiro;");
+        System.out.println("• O tabuleiro é definido pelas colunas A, B, C e linhas 1, 2 e 3;");
+        System.out.println("• As jogadas são realizadas de acordo com as posições abaixo:");
+        imprimirTabuleiro(tabuleiro);
+        System.out.println("• Ao final, o placar é exibido e é possível jogar novamente ou sair.");
+        System.out.println("**************** BOA SORTE E VAMOS COMEÇAR! ****************\n");
+
     }
 
     private static int primeiroJogador(String jogador1, String jogador2) {
@@ -142,18 +171,21 @@ public class JogoDaVelha {
         return Resultado;
     }
 
-    private static String[][] jogada(int jogadas, String jogadorXouO, String jogadorX,
-                                     String jogadorO, String tabuleiro[][]) {
+    private static String[][] jogada(int jogadas, String jogadorX,
+                                     String jogadorO, String[][] tabuleiro) {
         Scanner input = new Scanner(System.in);
+
+        String jogadorXouO;
 
         if (jogadas % 2 == 1) {
             jogadorXouO = "X";
-            System.out.print(jogadorX + " digite uma posição para a jogada: ");
+            System.out.print(jogadorX + ", digite uma posição para a jogada: ");
         } else {
             jogadorXouO = "O";
-            System.out.print(jogadorO + " digite uma posição para a jogada: ");
+            System.out.print(jogadorO + ", digite uma posição para a jogada: ");
         }
-        String posicao = input.nextLine();
+
+        String posicao = input.nextLine().toUpperCase();
 
         switch (posicao) {
             case "A1":
@@ -185,10 +217,30 @@ public class JogoDaVelha {
                 break;
             default:
                 System.out.println("Posição inexistente ou já preenchida.");
-                tabuleiro = jogada(jogadas, jogadorXouO, jogadorX, jogadorO, tabuleiro);
+                tabuleiro = jogada(jogadas, jogadorX, jogadorO, tabuleiro);
         }
         imprimirTabuleiro(tabuleiro);
         return tabuleiro;
+    }
+
+    public static void clearConsole() {
+
+        try {
+            String operatingSystem = System.getProperty("os.name"); //Check the current operating system
+
+            if (operatingSystem.contains("Windows")) {
+                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls", "clear");
+                Process startProcess = pb.inheritIO().start();
+                startProcess.waitFor();
+            } else {
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                Process startProcess = pb.inheritIO().start();
+
+                startProcess.waitFor();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }
