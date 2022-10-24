@@ -9,6 +9,7 @@ public class Corrida {
         Carro carroAna = new Carro(1, ana, 60f, 0f, false);
         Carro carroCaio = new Carro(2, caio, 60f, 0f, false);
 
+        System.out.println("------------------ Corrida de Carros Encapsulados -----------------\n");
         System.out.println("----------------------------- Pista 1 -----------------------------");
         apresentarCarroPiloto(carroAna);
         System.out.println("** Ligar.");
