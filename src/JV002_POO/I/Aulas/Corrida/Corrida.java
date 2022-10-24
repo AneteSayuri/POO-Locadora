@@ -10,13 +10,7 @@ public class Corrida {
         Carro carroCaio = new Carro(2, caio, 60f, 0f, false);
 
         System.out.println("----------------------------- Pista 1 -----------------------------");
-        System.out.println(" Número do carro: " + carroAna.getNumeroCarro());
-        System.out.println(" Piloto(a): " + carroAna.getPiloto().getNome());
-        System.out.println(" Idade: " + carroAna.getPiloto().getIdade());
-        System.out.println(" Equipe: " + carroAna.getPiloto().getEquipe());
-        System.out.println(" Velocidade máxima do carro: " + carroAna.getVelocidadeMaxima() + " km/h.");
-        System.out.println("-------------------------------------------------------------------");
-        System.out.println("** O carro irá:");
+        apresentarCarroPiloto(carroAna);
         System.out.println("** Ligar.");
         ligar(carroAna);
         System.out.println("** Acelerar.");
@@ -31,14 +25,8 @@ public class Corrida {
 
         System.out.println();
         System.out.println("----------------------------- Pista 2 -----------------------------");
-        System.out.println(" Número do carro: " + carroCaio.getNumeroCarro());
-        System.out.println(" Piloto(a): " + carroCaio.getPiloto().getNome());
-        System.out.println(" Idade: " + carroCaio.getPiloto().getIdade());
-        System.out.println(" Equipe: " + carroCaio.getPiloto().getEquipe());
-        System.out.println(" Velocidade máxima do carro: " + carroCaio.getVelocidadeMaxima() + " km/h.");
-        System.out.println("-------------------------------------------------------------------");
-        System.out.println("** O carro irá:");
-        System.out.println("** Acelerar desligado.");
+        apresentarCarroPiloto(carroCaio);
+        System.out.println("** Acelerar o carro desligado.");
         acelerar(10f, carroCaio);
         System.out.println("** Ligar.");
         ligar(carroCaio);
@@ -56,8 +44,19 @@ public class Corrida {
 
     }
 
+    // Métodos:
+    // Inicializar a pista
+    private static void apresentarCarroPiloto(Carro carro) {
+        System.out.println(" Número do carro: " + carro.getNumeroCarro());
+        System.out.println(" Piloto(a): " + carro.getPiloto().getNome());
+        System.out.println(" Idade: " + carro.getPiloto().getIdade());
+        System.out.println(" Equipe: " + carro.getPiloto().getEquipe());
+        System.out.println(" Velocidade máxima do carro: " + carro.getVelocidadeMaxima() + " km/h.");
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("** Ações executadas pelo carro:");
+    }
 
-    // Métodos
+
     //+ ligar()
     public static void ligar(Carro carro) {
         carro.setLigado(true);
@@ -69,7 +68,7 @@ public class Corrida {
     //* Frear e Acelerar só funcionam se o carro estiver ligado
     public static void acelerar(float velocidadeAdicionada, Carro carro) {
         if (carro.isLigado()) {
-            System.out.println(" * Acelerando o carro da(o) " + carro.getPiloto().getNome() + "...");
+            System.out.println(" * Acelerando o carro em " + velocidadeAdicionada + " km/h...");
             System.out.print("   Velocidade atual: " + carro.getVelocidadeAtual() + " km/h.");
             float novaVelocidade = carro.getVelocidadeAtual() + velocidadeAdicionada;
             if (novaVelocidade >= carro.getVelocidadeMaxima()) {
@@ -88,7 +87,7 @@ public class Corrida {
     //+ frear(float) - reduz a velocidade em Km/h (subtrai em Km/h a velocidade atual)
     public static void frear(float velocidadeReduzida, Carro carro) {
         if (carro.isLigado()) {
-            System.out.println(" * Freando o carro da(o) " + carro.getPiloto().getNome() + "...");
+            System.out.println(" * Freando o carro em " + velocidadeReduzida + " km/h...");
             System.out.print("   Velocidade atual: " + carro.getVelocidadeAtual() + " km/h.");
 
             if (carro.getVelocidadeAtual() == 0f) {
@@ -111,7 +110,7 @@ public class Corrida {
     //+ parar() - velocidade igual a 0 Km/h
     public static void parar(Carro carro) {
         if (carro.isLigado()) {
-            System.out.println(" * Parando o carro da(o) " + carro.getPiloto().getNome() + "...");
+            System.out.println(" * Parando o carro...");
             System.out.print("   Velocidade atual: " + carro.getVelocidadeAtual() + " km/h.");
 
             if (carro.getVelocidadeAtual() == 0f) {
@@ -129,7 +128,7 @@ public class Corrida {
     //* Desligar só funciona se o carro estiver parado
     public static void desligar(Carro carro) {
 
-        System.out.println(" * Desligando o carro da(o) " + carro.getPiloto().getNome() + "...");
+        System.out.println(" * Desligando o carro...");
         System.out.println("   Velocidade atual: " + carro.getVelocidadeAtual() + " km/h.");
 
         if (carro.getVelocidadeAtual() > 0f) {
